@@ -1,4 +1,4 @@
-﻿//#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include <regex>
 #include <iostream>
 #include <console.h>
@@ -185,6 +185,10 @@ help-for-commands   --- √√√
 -more commands
 
 
+ *-PATH needs username of system
+ *-VER command prints version of Operating System
+ *-MKDRI , DIR
+ *-List of File names, last-modified date&time, size
 
 
 
