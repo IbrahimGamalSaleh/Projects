@@ -12,7 +12,7 @@
 #include <utility>
 
 #define KW_LEN 14
-#define CMDS 20
+#define CMDS 30
 
 char command[1024];
 char PATH[1024];
@@ -21,21 +21,22 @@ char PATH[1024];
 void ATTRIB(char*);
 void CD(char*);
 void CHDIR(char*);
-void CLS(char*);
-void CMD(char*);
+void CLS(char*); //*
+void CMD(char*); //*
 void DEL(char*);
-void DIR(char*);
+void DIR(char*); //*
 void EDIT(char*);
-void EXIT(char*);
-void HELP(char*);
+void EXIT(char*); //*
+void HELP(char*); //*
 void MD(char*);
 void MKDIR(char*);
-void PRINT(char*);
+void PRINT(char*); //*
 void RD(char*);
-void RENAME(char*);
+void RENAME(char*); //*
 void SYSTEMINFO(char*);
-void TASKLIST(char*);
-void TITLE(char*);
+void TASKLIST(char*); //*
+void TITLE(char*); //*
+void TIME(char*); //*
 void TYPE(char*);
 void VER(char*);
 // commands, ends here
@@ -43,12 +44,12 @@ void VER(char*);
 char cmd[CMDS][14] = { "ATTRIB", "CD", "CHDIR", "CLS", "CMD", "DEL"
 					, "DIR", "EDIT", "EXIT", "HELP", "MD", "MKDIR"
 					, "PRINT", "RD", "RENAME", "SYSTEMINFO"
-					, "TASKLIST", "TITLE", "TYPE", "VER"};
+					, "TASKLIST", "TITLE", "TIME", "TYPE", "VER"};
 
 void(*funs[CMDS]) (char*) = { ATTRIB, CD, CHDIR, CLS, CMD, DEL
 							, DIR, EDIT, EXIT, HELP, MD, MKDIR
 							, PRINT, RD, RENAME, SYSTEMINFO
-							, TASKLIST, TITLE, TYPE, VER };
+							, TASKLIST, TITLE, TIME, TYPE, VER };
 
 void Interfancy();
 void VERSION();
@@ -57,7 +58,7 @@ void execute(char*);
 
 void main(void) {
 
-	strcpy(PATH, "C:\\Users\\Youssof Kamal El - Din");
+	strcpy(PATH, "C:\\Users\\%s");
 
 	Interfancy();
 
@@ -69,6 +70,7 @@ void main(void) {
 			command[strlen(command) - 1] = 0;
 		} while (strlen(command) == 0);
 
+		printf("%s\n", command);
 		execute(command);
 	}
 }
@@ -100,15 +102,15 @@ void execute(char* line) {
 		kw[i] = line[i];
 
 	kw[i] = 0;
-
+	
 	for (int k = 0; kw[k]; ++k)
 		kw[k] = toupper(kw[k]);
-
+	
 	int j = 0;
 	for (int i = strlen(kw) + 1; i<strlen(line); ++j, ++i)
 		line[j] = line[i];
 	line[j] = 0;
-
+	printf("%s\n", kw);
 	for (i = 0; i < CMDS; ++i)
 		if (strcmp(cmd[i], kw) == 0) {
 			funs[i](line);
@@ -120,15 +122,20 @@ void execute(char* line) {
 
 }
 
+// COMMANDS start here
 void ATTRIB(char* LINE) {
+
+//	if (LINE[0])
 
 }
 
 void CD(char* LINE) {
 
 	if (strlen(LINE) == 0)
-		printf("%s", PATH);
+		printf("%s\n", PATH);
 	else strcpy_s(PATH, LINE);
+	if(PATH[0]>='a')
+		PATH[0] = PATH[0] + ('A' - 'a');
 
 }
 
@@ -142,7 +149,9 @@ void CLS(char* LINE) {
 	//clrscr(0);
 }
 
-void CMD(char* LINE) {}
+void CMD(char* LINE) {
+
+}
 
 void DEL(char* LINE) {
 
@@ -228,9 +237,13 @@ void MD(char* LINE){
 
 }
 
-void MKDIR(char* LINE) {}
+void MKDIR(char* LINE) {
 
-void PRINT(char* LINE) {}
+}
+
+void PRINT(char* LINE) {
+
+}
 
 void RD(char* LINE) {
 
@@ -240,15 +253,27 @@ void RENAME(char* LINE) {
 
 }
 
-void SYSTEMINFO(char* LINE) {}
+void SYSTEMINFO(char* LINE) {
 
-void TASKLIST(char* LINE) {}
+}
+
+void TASKLIST(char* LINE) {
+
+}
 
 void TITLE(char*LINE) {
 	SetConsoleTitleA(LINE);
 }
 
-void VER(char* LINE) {}
+void TIME(char* LINE)
+{
+	time_t ct;
+	tm * tt = new tm();
+	time(&ct);
+	localtime_s(tt, &ct);
+	printf("%d/%d/%d  %d:%d:%d\n", tt->tm_mday, tt->tm_mon + 1, tt->tm_year + 1900, tt->tm_hour, tt->tm_min, tt->tm_sec);
+
+}
 
 void TYPE(char* LINE) {
 	//char*cont = new char[10000];
@@ -270,34 +295,15 @@ void TYPE(char* LINE) {
 	}
 	File.close();
 }
-void TIME(char*LINE)
-{
-	time_t ct;
-	tm * tt = new tm();
-	time(&ct);
-	localtime_s(tt, &ct);
-	printf("%d / %d / %d  %d:%d:%d\n", tt->tm_mday, tt->tm_mon + 1, tt->tm_year + 1900, tt->tm_hour, tt->tm_min, tt->tm_sec);
+
+void VER(char* LINE) {
 
 }
 
+
 /*
 
-
-Interface   --- vvv
-
-help-for-commands   --- vvv
-
-**commands
--check for recognizable commands and safety of unrecognizable   --- vvv
--working commands
--more commands
-
-
-*-PATH needs username of system
 *-VER command prints version of Operating System
-*-MKDRI , DIR
-*-List of File names, last-modified date&time, size
-
 
 
 
