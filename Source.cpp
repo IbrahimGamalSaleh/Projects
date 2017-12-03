@@ -1,10 +1,14 @@
 //#include <bits/stdc++.h>
+#include "TASKLIST.cpp"
 #include <regex>
 #include <iostream>
 #include <console.h>
 #include <windows.h>
 #include <fstream>
+#include <istream>
+#include <ostream>
 #include <conio.h>
+#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -27,6 +31,7 @@ void DEL(char*);
 void DIR(char*); //*
 void EDIT(char*);
 void EXIT(char*); //*
+void FIND(char*); 
 void HELP(char*); //*
 void MD(char*);
 void MKDIR(char*);
@@ -37,19 +42,19 @@ void SYSTEMINFO(char*);
 void TASKLIST(char*); //*
 void TITLE(char*); //*
 void TIME(char*); //*
-void TYPE(char*);
-void VER(char*);
-// commands, ends here
+void TYPE(char*); //*
+void VER(char*); // mostly can't
+				 // commands, ends here
 
 char cmd[CMDS][14] = { "ATTRIB", "CD", "CHDIR", "CLS", "CMD", "DEL"
-					, "DIR", "EDIT", "EXIT", "HELP", "MD", "MKDIR"
-					, "PRINT", "RD", "RENAME", "SYSTEMINFO"
-					, "TASKLIST", "TITLE", "TIME", "TYPE", "VER"};
+, "DIR", "EDIT", "EXIT", "FIND", "HELP", "MD", "MKDIR"
+, "PRINT", "RD", "RENAME", "SYSTEMINFO"
+, "TASKLIST", "TITLE", "TIME", "TYPE", "VER" };
 
 void(*funs[CMDS]) (char*) = { ATTRIB, CD, CHDIR, CLS, CMD, DEL
-							, DIR, EDIT, EXIT, HELP, MD, MKDIR
-							, PRINT, RD, RENAME, SYSTEMINFO
-							, TASKLIST, TITLE, TIME, TYPE, VER };
+, DIR, EDIT, EXIT, FIND, HELP, MD, MKDIR
+, PRINT, RD, RENAME, SYSTEMINFO
+, TASKLIST, TITLE, TIME, TYPE, VER };
 
 void Interfancy();
 void VERSION();
@@ -58,9 +63,14 @@ void execute(char*);
 
 void main(void) {
 
-	strcpy(PATH, "C:\\Users\\%s");
+	strcpy(PATH, "C:\\Users\\");
 
 	Interfancy();
+	DWORD USRNAMEsize = 100;
+	char USRNAME[100];
+	GetUserNameA(USRNAME, &USRNAMEsize);
+
+	strcpy(PATH + 9, USRNAME);
 
 	while (1) {
 
@@ -102,10 +112,10 @@ void execute(char* line) {
 		kw[i] = line[i];
 
 	kw[i] = 0;
-	
+
 	for (int k = 0; kw[k]; ++k)
 		kw[k] = toupper(kw[k]);
-	
+
 	int j = 0;
 	for (int i = strlen(kw) + 1; i<strlen(line); ++j, ++i)
 		line[j] = line[i];
@@ -125,7 +135,7 @@ void execute(char* line) {
 // COMMANDS start here
 void ATTRIB(char* LINE) {
 
-//	if (LINE[0])
+	//	if (LINE[0])
 
 }
 
@@ -134,7 +144,7 @@ void CD(char* LINE) {
 	if (strlen(LINE) == 0)
 		printf("%s\n", PATH);
 	else strcpy_s(PATH, LINE);
-	if(PATH[0]>='a')
+	if (PATH[0] >= 'a')
 		PATH[0] = PATH[0] + ('A' - 'a');
 
 }
@@ -146,14 +156,54 @@ void CHDIR(char* LINE) {
 }
 
 void CLS(char* LINE) {
-	//clrscr(0);
+	clrscr(0);
 }
 
 void CMD(char* LINE) {
+	STARTUPINFO info = { sizeof(info),0,0,L"NEW" };
+	PROCESS_INFORMATION processInfo;
+	if (!CreateProcess(TEXT("G:\\FAC\\Third Year\\First Term\\Operating System\\PROJECT\\CODES\\VS2015\\PROJETC\\Debug\\PROJETC.exe"),   // No module name (use command line)
+		NULL,				// Command line
+		NULL,				// Process handle not inheritable
+		NULL,				// Thread handle not inheritable
+		FALSE,				// Set handle inheritance to FALSE
+		CREATE_NEW_CONSOLE, // No creation flags
+		NULL,				// Use parent's environment block
+		NULL,			    // Use parent's starting directory 
+		&info,				// Pointer to STARTUPINFO structure
+		&processInfo)		// Pointer to PROCESS_INFORMATION structure
+		)
+	{
+		printf("CreateProcess failed (%d).\n", GetLastError());
+		return;
+	}
+	/*
 
+	if (CreateProcessA("G:\\FAC\\Third Year\\First Term\\Operating System\\PROJECT\\CODES\\VS2015\\PROJETC\\Debug\\PROJETC.exe", "",
+	NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo)) {
+	WaitForSingleObject(processInfo.hProcess, INFINITE);
+	CloseHandle(processInfo.hProcess);
+	CloseHandle(processInfo.hThread);
+	}
+
+	CreateProcessA(,NULL,);
+	system("cmd \"G:\\FAC\\Third Year\\First Term\\Operating System\\PROJECT\\CODES\\VS2015\\PROJETC\\Debug\\PROJETC.exe\"");*/
 }
 
 void DEL(char* LINE) {
+
+	WIN32_FIND_DATAA d;
+	HANDLE hfile = FindFirstFileA(LINE, &d);
+	if (hfile != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+
+
+
+		} while (FindNextFileA(hfile, &d) != 0);
+		FindClose(hfile);
+	}
 
 }
 
@@ -168,28 +218,25 @@ void DIR(char* LINE) {
 	HANDLE hfile = FindFirstFileA(LINE, &d);
 	if (hfile != INVALID_HANDLE_VALUE)
 	{
-
 		do
 		{
 			FileTimeToLocalFileTime(&d.ftCreationTime, &ftLocal);
 			FileTimeToSystemTime(&ftLocal, &stCreate);
-
 			printf("%02d/%02d/%d %02d:%02d:%02d",
 				stCreate.wMonth, stCreate.wDay, stCreate.wYear,
 				stCreate.wHour, stCreate.wMinute, stCreate.wSecond);
+
 			if (d.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 			{
-
 				std::cout << "    <DIR>    ";
 				dir++;
 			}
 			else
 			{
-
 				size = d.nFileSizeHigh;
 				size <<= 32;
 				size += d.nFileSizeLow;
-				printf("         %lld", size);
+				printf("\t %lld", size);
 				file++;
 			}
 			std::cout << "          " << d.cFileName << "\n";
@@ -206,7 +253,59 @@ void EDIT(char* LINE) {
 }
 
 void EXIT(char* LINE) {
-	system("exit");
+
+}
+
+void FIND(char* LINE) {
+
+	//std::string wrd = "";
+	char wrd[10000];
+	int i;
+	
+	for (i = 0; LINE[i+1] != '"';++i)
+		wrd[i] = LINE[i+1];
+	wrd[i] = 0;
+	printf("%c\n", wrd[i]);
+	
+	for (i = 0; i+ strlen(wrd)+3 < strlen(LINE); ++i)
+		LINE[i] = LINE[i+ strlen(wrd)+3];
+	LINE[i] = 0;
+
+	printf("\n%s\n", LINE);
+
+	std::string cont = "";
+
+	char pat[1024];
+	for (i = 0; i < strlen(LINE) && LINE[i] != '\\'; ++i)
+		pat[i] = LINE[i];
+
+	printf("\n%s\n", pat);
+
+	WIN32_FIND_DATAA d;
+	HANDLE hfile = FindFirstFileA(LINE, &d);
+	if (hfile != INVALID_HANDLE_VALUE) {
+		printf("\n%s\n", LINE);
+		do {
+			strcpy(pat + i, d.cFileName);
+			printf("---------- %s", pat);
+			std::fstream File;
+			File.open(pat, std::fstream::in);
+			while (getline(File, cont)) {
+				std::stringstream ssstrng(cont);
+				std::string part="";
+				while (ssstrng>>part)
+					if (strcmp(part.c_str(),wrd)==0){
+						printf("%s\n", cont.c_str());
+						break;
+					}
+			}
+			File.close();
+			printf("\n\n");
+
+		} while (FindNextFileA(hfile, &d) != 0);
+		FindClose(hfile);
+	}
+
 }
 
 void HELP(char* LINE) {
@@ -229,11 +328,11 @@ void HELP(char* LINE) {
 	printf("VER\t\tDisplays the Windows version.\n");
 
 	printf("\nFor more help, think about it twice; there's no online-help :P\n");
-	printf("\TYPE\t\tDisplays the contents of a text file.\n");
+	printf("\nTYPE\t\tDisplays the contents of a text file.\n");
 	printf("\n");
 }
 
-void MD(char* LINE){
+void MD(char* LINE) {
 
 }
 
@@ -259,6 +358,31 @@ void SYSTEMINFO(char* LINE) {
 
 void TASKLIST(char* LINE) {
 
+	DWORD aProcesses[1024], cbNeeded, cProcesses;
+
+	if (!EnumProcesses(aProcesses, sizeof(aProcesses), &cbNeeded))
+		return;
+
+	cProcesses = cbNeeded / sizeof(DWORD);
+
+	printf("\n|Process Name \t\t\t| PID  \t|\n");
+	printf("------------------------------------------------------------------\n");
+
+	for (int index = 0; index < cProcesses; index++) {
+		char szProcessName[MAX_PATH] = "unknown";
+
+		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, aProcesses[index]);
+		HMODULE hMod;
+
+		if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded))
+			GetModuleBaseNameA(hProcess, hMod, szProcessName, sizeof(szProcessName));
+
+		printf("%s", szProcessName);
+		for (int i = ceil(strlen(szProcessName) / 8.0); i < 5; ++i) printf("\t");
+		printf("%*d\n", 6, aProcesses[index]);
+
+	}
+
 }
 
 void TITLE(char*LINE) {
@@ -276,24 +400,41 @@ void TIME(char* LINE)
 }
 
 void TYPE(char* LINE) {
-	//char*cont = new char[10000];
-	std::string cont = "";
-	std::fstream File;
-	File.open(LINE);
-	if (File.is_open())
-	{
-		while (!File.eof())
-		{
-			std::getline(File, cont);
-			std::cout << cont << "\n";
-		}
 
-	}
+	std::string cont = "";
+
+	WIN32_FIND_DATAA d;
+	HANDLE hfile = FindFirstFileA(LINE, &d);
+	char pat[1024];
+	int i;
+	for (i = 0; i < strlen(LINE) && LINE[i] != '\\'; ++i)
+		pat[i] = LINE[i];
+
+	/*	FILE *File = fopen(LINE, "r");
+
+	if (File) // not NULL  //if (freopen("E:\a.bat","r",stdin))
+	while (fscanf(File, "%s", cont))
+	printf("%s\n", cont);
 	else
-	{
-		std::cout << "Failed to open this file";
+	printf("Failed to open this file\n");
+
+	fclose(File);
+	*/
+
+	if (hfile != INVALID_HANDLE_VALUE) {
+		do {
+			strcpy(pat+i, d.cFileName);
+			std::fstream File;
+			File.open(pat, std::fstream::in);
+			while (getline(File,cont))
+				printf("%s\n", cont.c_str());
+			File.close();
+			printf("\n\n");
+
+		} while (FindNextFileA(hfile, &d) != 0);
+		FindClose(hfile);
 	}
-	File.close();
+
 }
 
 void VER(char* LINE) {
