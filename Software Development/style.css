@@ -1,0 +1,131 @@
+body{
+    padding:0px;
+    width:100%;
+    height:100%;
+    margin:auto;
+    font-family:Arial;
+    text-align:center;
+}
+
+#header{
+    padding: 5px;
+    margin: auto;
+    width:100%;
+    height:60px;
+    background:#550000;
+    text-align:center;
+}
+
+#bgImg{
+    padding 5px;
+}
+#bgImg img{
+    padding: 0px;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+#form{
+    margin: -450px 0px 0px 0px;
+    width:100%;
+}
+
+#depart{
+    margin: 0px 0px 10px 0px;
+    color:gray;
+    padding: 4px 9px 4px 9px;
+    width:350px;
+    height:50px;
+    border: 1px transparent solid;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+
+#destination{
+    margin: 10px 0px 20px 0px;
+    color:gray;
+    padding: 4px 9px 4px 9px;
+    width:350px;
+    height:50px;
+    border: 1px transparent solid;
+    border-radius: 5px; 
+    font-size: 20px;
+}
+
+#types{
+    color:burlywood;
+    padding: 4px 9px 4px 9px;
+    margin: 5px 0px 40px 0px;
+    width:200px;
+    height:35px;
+    border: 1px burlywood solid;
+    border-radius: 5px; 
+    
+}
+
+#show_submit{
+    height:40px;
+    width:140px;
+    color:white;
+    font-size:16px;
+    background-color:#865f17;
+    border:1px solid #f3bd59;
+    border-radius: 5px;
+    text-shadow:rgb(0,0,0) 3px 3px 3px ;
+}
+
+#header #text {
+    margin-left:-1050px;
+    margin-top:15px;
+    text-shadow:rgb(0,0,0) 4px 4px 4px ;
+}
+
+#header #logo img{
+    margin:-153px 0px 0px -1290px;
+    height:272px;
+    width:500px;
+}
+
+#header #logo2 img{
+    margin-left:auto;
+    margin-top:-195px;
+    width:160px;
+}
+
+#ribbon{
+    text-align:center;
+    margin:-250px 0px 0px 250px;
+}
+
+#showtable{
+    margin: 190px 0px 0px 150px;
+    width:80%;
+}
+
+#showtable th{
+    color:white;
+    background-color:#550000;
+}
+
+#ID{
+    
+}
+
+#DTime{
+
+}
+
+#ATime{
+
+}
+
+#Class{
+
+}
+
+#Price{
+
+}
