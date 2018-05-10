@@ -24,7 +24,7 @@ body{
     text-align: center;
 }
 
-select, input[type=submit]{
+datalist, select, input[type=submit]{
     outline: none;
 }
 
@@ -39,7 +39,7 @@ option{
     background-color: rgba(0, 0, 0, .15);
 }
 
-#depart{
+#departt, #depart{
     margin: 0px 0px 10px 0px;
     background-color:transparent;
     background-color: rgb(255, 255, 255,.4);
@@ -53,7 +53,7 @@ option{
     border:#087083 solid 1px;
 }
 
-#destination{
+#destinationn, #destination{
     margin: 10px 0px 20px 0px;
     background-color:transparent;
     background-color: rgb(255, 255, 255,.4);
@@ -67,7 +67,7 @@ option{
     border:#087083 solid 1px;
 }
 
-#types{
+#typess, #types{
     color:#096c7e;
     background-color:transparent;
     background-color: rgb(255, 255, 255,.6);

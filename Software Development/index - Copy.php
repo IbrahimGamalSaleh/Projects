@@ -46,26 +46,23 @@ $body=<<< BODY
 BODY;
 echo $body;
     
-    echo "<input id=\"departt\" list=\"depart\" name=\"depart\" />";
-    echo"<datalist id=\"depart\" name=\"depart\">";
+    echo"<select id=\"depart\" name=\"depart\">";
     foreach ($cities_from as $c)
         echo "<option> $c[depart] </option>";
-    echo "</datalist>";
+    echo "</select>";
 	echo "<br />";
-            
-    echo "<input id=\"destinationn\" list=\"destination\" name=\"destination\" />";
-    echo "<datalist id=\"destination\">";
+			
+    echo "<select id=\"destination\" name=\"destination\">";
     foreach ($cities_to as $c)
         echo "<option> $c[arrive] </option>";
-	echo "</datalist>";
+	echo "</select>";
     echo "<br />";
 
-    echo "<input id=\"typess\" value=\"ALL\" list=\"types\" name=\"class\" />";
-    echo "<datalist id=\"types\" >";
-    echo "<option value=\"ALL\"> ALL </option>";
+    echo "<select id=\"types\" name=\"class\" >";
+    echo "<option> ALL </option>";
     foreach ($classes as $c)
-        echo "<option value=\"$c[class]\"> $c[class] </option>";
-    echo "</datalist>";
+        echo "<option> $c[class] </option>";
+    echo "</select>";
 	echo "<br />";
 			
     echo "<input type=\"submit\" id=\"show_submit\" name=\"submit\" value=\"show\" />";
