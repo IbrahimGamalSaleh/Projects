@@ -9,93 +9,127 @@ root = ''
 Welcome = ''
 Ok = ''
 Path = ''
-InputPath = ''
-OutputPath = ''
+InputPath = '' # 'C:\\Users\\Youssof_El-Kilaney\\Desktop\\test\\test.txt'
+OutputPath = '' # 'C:\\Users\\Youssof_El-Kilaney\\Desktop\\test\\outputtest.txt'
 Ways = ''
 execution = ''
-optionz = ['Read file', 'Binary Search', 'Merge sort', 'Quick Sort', 'Disclaimer']
+optionz = ['Read file', 'Binary Search', 'Merge sort', 'Quick Sort', 'Heap Sort', 'Count Sort', 'Disclaimer']
 
 def __read_file__():
     reading = ''
-    if v==2:
-        if InputPath != '':
-            Fayl = file(InputPath, 'r')
-            reading = Fayl.read()
-        else:
-            Fayl = file('input.txt', 'r')
-            reading = Fayl.read()
-    elif v==3:
-        if InputPath != '':
-            with open(InputPath, 'r') as F:
-                for line in iter(F.readline, ''):
-                    reading += line
-        else:
-            with open('input.txt', 'r') as F:
-                for line in iter(F.readline, ''):
-                    reading += line
+    try:
+        if v==2:
+            if InputPath != '':
+                Fayl = file(InputPath, 'r')
+                reading = Fayl.read()
+            else:
+                Fayl = file('input.txt', 'r')
+                reading = Fayl.read()
+        elif v==3:
+            if InputPath != '':
+                with open(InputPath, 'r') as F:
+                    for line in iter(F.readline, ''):
+                        reading += line
+            else:            
+                with open('input.txt', 'r') as F:
+                    for line in iter(F.readline, ''):
+                        reading += line
+        reading = reading.strip()
+        if reading.__len__ == 0:
+            if v==2:
+                msgbx.showinfo("Empty File", "No Contents in this file")
+            elif v==3:
+                tkinter.messagebox.showinfo("Empty File", "No Contents in this file")
+            return False
+    except:
+        err = "Input file not found, please select a file with a proper path"
+        if v==2:
+            msgbx.showinfo("File not found", err)
+        elif v==3:
+            tkinter.messagebox.showinfo("File not found", err)
+        return False
     return reading
-
-
-def __write_file__(reading, name=''):
-    if v==2:
-        Fayl = file('output.txt', 'w')
-        if name != '':
-            Fayl = file(name, 'w')
-        Fayl.write(reading)
-    elif v==3:
-        if name != '':
-            with open(name, 'w') as F:
-                print(reading, file=F)
-        else:
-            with open('output.txt', 'w') as F:
-                print(reading, file=F)
 
 
 def __read_file():
     reading = __read_file__()
-    if v==2:
-        msgbx.showinfo("file read", reading)
-    elif v==3:
-        tkinter.messagebox.showinfo("file read", reading)
-
-
-def __binary_search(key=0):
-    __manual()
-    reading = __read_file__()
-    nums = reading.split(' ');
-    if nums.__len__() == 0:
-        msgbx.showinfo('empty file', 'Input file is empty')
+    if reading:
+        if v==2:
+            msgbx.showinfo("input file read", reading)
+        elif v==3:
+            tkinter.messagebox.showinfo("input file read", reading)
+    else:
         return
 
+
+def __write_file__(reading, name=''):
+    try:
+        if v==2:
+            Fayl = file('D:\output.txt', 'w')
+            if name != '':
+                Fayl = file(name, 'w')
+            Fayl.write(reading)
+        elif v==3:
+            if name != '':
+                with open(name, 'w') as F:
+                    print(reading, file=F)
+            else:
+                with open('D:\output.txt', 'w') as F:
+                        print(reading, file=F)
+    except:
+        err = "application could not create/write the output file"
+        if v==2:
+            msgbx.showinfo('Failed output', err)
+        elif v==3:
+            tkinter.messagebox.showinfo('Failed output', err)
+
+
+def __parse__inputs__(nums):
     numms = []
     idx=0
+    t=0
     for n in nums:
+        t += 1
         try :
             numms.append(int(n))
             idx += 1
         except:
             pass
-            # if i!=0:
-            #     nums = nums[:i]
-            #     msgbx.showinfo('bad input', 'Search will be on the first ' + str(i) + ' items')
-            # else:
-            #     msgbx.showinfo('bad input', 'application could not parse file inputs or it is empty')
-            #     return
-    nums = numms
 
     if idx == 0:
         if v==2:
-            msgbx.showinfo('bad input', 'application could not parse file inputs or it is empty')
-            return
+            msgbx.showinfo('bad input', 'application could not parse file inputs')
         elif v==3:
-            tkinter.messagebox.showinfo('bad input', 'application could not parse file inputs or it is empty')
-            return
-    elif idx != nums.__len__():
+            tkinter.messagebox.showinfo('bad input', 'application could not parse file inputs')
+        return False
+    elif idx != t:
         if v==2:
             msgbx.showinfo('incomplete input', 'application could not parse all file inputs')
         elif v==3:
             tkinter.messagebox.showinfo('incomplete input', 'application could not parse all file inputs')
+    return numms
 
+
+def prepare():
+    nums = __read_file__()
+
+    if nums:
+        nums = (x.split()[0] for x in nums.split(','))
+    else:
+        return False
+
+    nums = __parse__inputs__(nums)
+    
+    return nums
+
+def __binary_search(key=0):
+    __manual()
+
+    nums = prepare()
+
+    if nums == False:
+        return
+    
     key = ''
     while key == '':
         s = ''
@@ -140,20 +174,16 @@ def __binary_search(key=0):
         elif v==3:
             tkinter.messagebox.showinfo('key not found! :(', 'key was not found')
 
-    log = "Execution Time: " + str((t2 - t1))[5:]
+    log = "Execution Time: " + str((t2 - t1))[2:]
     execution.config(text=log)
-    if v==2:
-        msgbx.showinfo('log', "Finished, output file containes sorted input file\n" + log)
-    elif v==3:
-        tkinter.messagebox.showinfo('log', "Finished, output file containes sorted input file\n" + log)
 
 
 
 def __merge_sort__(nums):
 
-    if 1 == nums.__len__() or 0 == nums.__len__():
-        return nums
-
+    if int(nums.__len__()) == 1:
+        return
+        
     l1 = nums[:int(nums.__len__() / 2)]
     __merge_sort__(l1)
 
@@ -187,58 +217,197 @@ def __merge_sort__(nums):
 
 
 def __merge_sort(nums=[]):
-    print (v)
-    t1 = datetime.datetime.now()
+
     write = 0
+    
     if nums.__len__() == 0:
         write = 1
-        nums = __read_file__().split()
+        nums = prepare()
+        if nums == False:
+            return
 
-    i=0
-    while i < nums.__len__():
-        nums[i] = int(nums[i])
-        i += 1
+    t1 = datetime.datetime.now()
 
     nums = __merge_sort__(nums)
+
+    t2 = datetime.datetime.now()
 
     if write:
         writing = ''
         for n in nums:
             writing += str(n) + ' '
         writing = writing[:-1]
-        if OutputPath == '' :
-            __write_file__(writing, 'output.txt')
-        else: __write_file__(writing, OutputPath)
-    t2 = datetime.datetime.now()
-    log = "Execution Time: " + str((t2 - t1))[5:]
+        __write_file__(writing, OutputPath)
+
+    log = "Execution Time: " + str((t2 - t1))[2:]
     execution.config(text=log)
     if v==2:
-        msgbx.showinfo('log', "Finished, output file containes sorted input file\n" + log)
+        msgbx.showinfo('log', "Finished, output file containes sorted input file\n")
     elif v==3:
-        tkinter.messagebox.showinfo('log', "Finished, output file containes sorted input file\n" + log)
+        tkinter.messagebox.showinfo('log', "Finished, output file containes sorted input file\n")
+
+
+def __partition__(nums, l, r):
+
+    x = nums[r]
+    i=l-1
+    while l < r:
+        if nums[l] <= x:
+            i += 1
+            nums[l], nums[i] = nums[i], nums[l]
+        l += 1
+    nums[r], nums[i+1] = nums[i+1], nums[r]
+    return i+1
+
+
+def __quick_sort__(nums, l, r):
+
+    try:
+        if l>=r:
+            return
+        p = __partition__(nums, l, r)
+        __quick_sort__(nums,l, p-1)
+        __quick_sort__(nums,p+1,r)
+    except:
+        # msg = "Quick sort can't be applied on this data, it contains many many recurrences of the same number\n";
+        # if v == 2:
+        #     msgbx.showinfo('Failed', msg)
+        # elif v == 3:
+        #     tkinter.messagebox.showinfo('Failed', msg)
+        return
 
 
 def __quick_sort():
 
-    nums = __read_file__().split()
+    nums = prepare()
 
-    i=0
-    while i < nums.__len__():
-        nums[i] = int(nums[i])
-        i += 1
+    if nums == False:
+        return
+
+    t1 = datetime.datetime.now()
+
+    __quick_sort__(nums, 0, nums.__len__()-1)
+
+    t2 = datetime.datetime.now()
 
     writing = ''
     for n in nums:
         writing += str(n) + ' '
     writing = writing[:-1]
-    if OutputPath == '':
-        __write_file__(writing, 'output.txt')
-    else:
-        __write_file__(writing, OutputPath)
+    __write_file__(writing, OutputPath)
+
+    log = "Execution Time: " + str((t2 - t1))[2:]
+    execution.config(text=log)
+    if v == 2:
+        msgbx.showinfo('log', "Finished, output file containes sorted input file\n")
+    elif v == 3:
+        tkinter.messagebox.showinfo('log', "Finished, output file containes sorted input file\n")
+
+
+def heapify(arr, n, i):
+    largest = i
+    l = 2 * i + 1
+    r = 2 * i + 2
+
+    if l < n and arr[i] < arr[l]:
+        largest = l
+
+    if r < n and arr[largest] < arr[r]:
+        largest = r
+
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        heapify(arr, n, largest)
+
+
+def __heap_sort__(arr):
+    n = len(arr)
+
+    for i in range(n, -1, -1):
+        heapify(arr, n, i)
+
+    for i in range(n - 1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i]
+        heapify(arr, i, 0)
 
 
 def __heap_sort():
-    pass
+
+    nums = prepare()
+
+    if nums == False:
+        return
+
+    t1 = datetime.datetime.now()
+
+    __heap_sort__(nums)
+
+    t2 = datetime.datetime.now()
+
+    writing = ''
+    for n in nums:
+        writing += str(n) + ' '
+    writing = writing[:-1]
+    __write_file__(writing, OutputPath)
+
+    log = "Execution Time: " + str((t2 - t1))[2:]
+    execution.config(text=log)
+    if v == 2:
+        msgbx.showinfo('log', "Finished, output file containes sorted input file\n")
+    elif v == 3:
+        tkinter.messagebox.showinfo('log', "Finished, output file containes sorted input file\n")
+
+
+def __count_sort__(nums):
+    C = [0] * (max(nums)+1)
+
+    for n in nums:
+        C[n] += 1
+
+    CC = []
+
+    s=0
+    for c in C:
+        s+=c
+        CC.append(s)
+
+    i = nums.__len__()
+    numms = [0] * i
+
+    i-=1
+    while i>=0:
+        numms[CC[nums[i]]-1] = nums[i]
+        CC[nums[i]] -= 1
+        i -= 1
+    nums = numms
+    
+
+
+def __count_sort():
+
+    nums = prepare()
+
+    if nums == False:
+        return
+
+    t1 = datetime.datetime.now()
+
+    __count_sort__(nums)
+
+    t2 = datetime.datetime.now()
+
+    writing = ''
+    for n in nums:
+        writing += str(n) + ' '
+    writing = writing[:-1]
+    __write_file__(writing, OutputPath)
+
+    log = "Execution Time: " + str((t2 - t1))[2:]
+    execution.config(text=log)
+    if v == 2:
+        msgbx.showinfo('log', "Finished, output file containes sorted input file\n")
+    elif v == 3:
+        tkinter.messagebox.showinfo('log', "Finished, output file containes sorted input file\n")
 
 
 def __manual():
@@ -267,6 +436,8 @@ def do_job():
     elif Ways.current() == 4:
         __heap_sort()
     elif Ways.current() == 5:
+        __count_sort()
+    elif Ways.current() == 6:
         __manual()
 
 
@@ -275,7 +446,7 @@ def InputFile():
     global OutputPath
     if v == 2:
         InputPath = tkFileDialog.asksaveasfilename(initialdir="D:/", title="Select file",
-                                                   filetypes=(("jpeg files", "*.jpg"), ("all files", "*.*")))
+                                                   filetypes=(("Text files", "*.txt"), ("all files", "*.*")))
     elif v == 3:
         InputPath = filedialog.askopenfilename(initialdir="D:/", title="input file",
                                                filetypes=(("Text File", "*.txt"), ("All Files", "*.*")))
@@ -286,9 +457,9 @@ def OutputFile():
     global OutputPath
     if v == 2:
         InputPath = tkFileDialog.askopenfilename(initialdir="D:/", title="Select file",
-                                                 filetypes=(("jpeg files", "*.jpg"), ("all files", "*.*")))
+                                                 filetypes=(("Text files", "*.txt"), ("all files", "*.*")))
     elif v == 3:
-        OutputPath = filedialog.asksaveasfilename(initialdir="D:/", title="input file",
+        OutputPath = filedialog.asksaveasfilename(initialdir="D:/", title="output file",
                                                   filetypes=(("Text File", "*.txt"), ("All Files", "*.*")))
 
 
@@ -348,9 +519,10 @@ def main3():
     InputBtn.grid(pady=5, ipady=3, ipadx=7, sticky=("w","e"))
     OutputBtn.grid(pady=5, ipady=3, ipadx=7, sticky=("w","e"))
 
-    Ways = ttk.Combobox(Main, values=optionz, width=25, font=("Helvetica",12))
-    Ways.current(1)
+    Ways = ttk.Combobox(Main, values=optionz, width=25, font=("Helvetica",12), justify=tkinter.CENTER)
     Ways.grid(row=1, padx=30, sticky="w", ipadx=5, ipady=5)
+    Ways.set("Select an algorithm to go")
+    Ways.state(['readonly'])
 
     # time declaration at start of the file with in status bar
     Status = tkinter.Frame(Main, background='white')
