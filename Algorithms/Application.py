@@ -23,7 +23,7 @@ def __read_file__():
                 Fayl = file(InputPath, 'r')
                 reading = Fayl.read()
             else:
-                Fayl = file('input.txt', 'r')
+                Fayl = file('D:\input.txt', 'r')
                 reading = Fayl.read()
         elif v==3:
             if InputPath != '':
@@ -31,7 +31,7 @@ def __read_file__():
                     for line in iter(F.readline, ''):
                         reading += line
             else:            
-                with open('input.txt', 'r') as F:
+                with open('D:\input.txt', 'r') as F:
                     for line in iter(F.readline, ''):
                         reading += line
         reading = reading.strip()
@@ -54,6 +54,7 @@ def __read_file__():
 def __read_file():
     reading = __read_file__()
     if reading:
+        print(reading)
         if v==2:
             msgbx.showinfo("input file read", reading)
         elif v==3:
@@ -75,19 +76,22 @@ def __write_file__(reading, name=''):
                     print(reading, file=F)
             else:
                 with open('D:\output.txt', 'w') as F:
-                        print(reading, file=F)
+                    print(reading, file=F)
     except:
         err = "application could not create/write the output file"
         if v==2:
             msgbx.showinfo('Failed output', err)
         elif v==3:
             tkinter.messagebox.showinfo('Failed output', err)
+        return False
+    return True
 
 
 def __parse__inputs__(nums):
     numms = []
     idx=0
     t=0
+    
     for n in nums:
         t += 1
         try :
@@ -112,14 +116,22 @@ def __parse__inputs__(nums):
 
 def prepare():
     nums = __read_file__()
-
+    m = []
     if nums:
-        nums = (x.split()[0] for x in nums.split(','))
+        nums = nums.split(',')
+        if nums.__len__() == 1:
+            nums = nums[0].split()
+        # for n in nums:
+        #     try:
+        #         n = n.split()[0]
+        #     except:
+        #         m += n.split()
+        # for x in m:
+        #     nums += x
     else:
         return False
 
     nums = __parse__inputs__(nums)
-    
     return nums
 
 def __binary_search(key=0):
@@ -237,7 +249,8 @@ def __merge_sort(nums=[]):
         for n in nums:
             writing += str(n) + ' '
         writing = writing[:-1]
-        __write_file__(writing, OutputPath)
+        if not __write_file__(writing, OutputPath):
+            return
 
     log = "Execution Time: " + str((t2 - t1))[2:]
     execution.config(text=log)
@@ -294,7 +307,8 @@ def __quick_sort():
     for n in nums:
         writing += str(n) + ' '
     writing = writing[:-1]
-    __write_file__(writing, OutputPath)
+    if not __write_file__(writing, OutputPath):
+        return False
 
     log = "Execution Time: " + str((t2 - t1))[2:]
     execution.config(text=log)
@@ -348,7 +362,8 @@ def __heap_sort():
     for n in nums:
         writing += str(n) + ' '
     writing = writing[:-1]
-    __write_file__(writing, OutputPath)
+    if not __write_file__(writing, OutputPath):
+        return False
 
     log = "Execution Time: " + str((t2 - t1))[2:]
     execution.config(text=log)
@@ -379,7 +394,7 @@ def __count_sort__(nums):
         numms[CC[nums[i]]-1] = nums[i]
         CC[nums[i]] -= 1
         i -= 1
-    nums = numms
+    return numms
     
 
 
@@ -392,7 +407,7 @@ def __count_sort():
 
     t1 = datetime.datetime.now()
 
-    __count_sort__(nums)
+    nums = __count_sort__(nums)
 
     t2 = datetime.datetime.now()
 
@@ -400,7 +415,8 @@ def __count_sort():
     for n in nums:
         writing += str(n) + ' '
     writing = writing[:-1]
-    __write_file__(writing, OutputPath)
+    if not __write_file__(writing, OutputPath):
+        return False
 
     log = "Execution Time: " + str((t2 - t1))[2:]
     execution.config(text=log)
