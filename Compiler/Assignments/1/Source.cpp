@@ -74,63 +74,67 @@ int main() {
 	fast file;
 
 	initialize();
-	
+
+
 
 	string s;
-	getline(cin, s);
-	
-	string identifier = "";
-	int number = 0;
-	char opertor = '\0';
+	while (getline(cin, s)) {
 
-	for (int i = 0; i < s.size(); ++i) {
-		if (grmr[2].count(s[i]))
-			if (state != 1)
-				number = number * 10 + (s[i] - '0'), state = 2;
-			else
+		string identifier = "";
+		int number = 0;
+		char opertor = '\0';
+
+		for (int i = 0; i < s.size(); ++i) {
+			if (grmr[2].count(s[i]))
+				if (state != 1)
+					number = number * 10 + (s[i] - '0'), state = 2;
+				else
+					identifier += s[i];
+			else if (grmr[1].count(s[i])) {
+				if (state == 2) {
+					numbers.push_back(number);
+					number = 0;
+				}
 				identifier += s[i];
-		else if (grmr[1].count(s[i])) {
-			if (state == 2) {
-				numbers.push_back(number);
-				number = 0;
+				state = 1;
 			}
-			identifier += s[i];
-			state = 1;
-		}
-		else if (grmr[3].count(s[i])) {
-			opertors.push_back(s[i]);
-			if (state == 1) {
-				identifiers.push_back(identifier);
-				identifier = "";
-				state = 0;
+			else if (grmr[3].count(s[i])) {
+				opertors.push_back(s[i]);
+				if (state == 1) {
+					identifiers.push_back(identifier);
+					identifier = "";
+					state = 0;
+				}
+				else if (state == 2) {
+					numbers.push_back(number);
+					number = 0;
+					state = 0;
+				}
 			}
-			else if (state == 2) {
-				numbers.push_back(number);
-				number = 0;
-				state = 0;
-			}
-		} else {
-			if (state == 1) {
-				identifiers.push_back(identifier);
-				identifier = "";
-				state = 0;
-			}
-			else if (state == 2) {
-				numbers.push_back(number);
-				number = 0;
-				state = 0;
+			else {
+				if (state == 1) {
+					identifiers.push_back(identifier);
+					identifier = "";
+					state = 0;
+				}
+				else if (state == 2) {
+					numbers.push_back(number);
+					number = 0;
+					state = 0;
+				}
 			}
 		}
-	}
 
-	if (state == 1) {
-		identifiers.push_back(identifier);
-		identifier = "";
-		state = 0;
-	} else if (state == 2) {
-		numbers.push_back(number);
-		number = 0;
-		state = 0;
+		if (state == 1) {
+			identifiers.push_back(identifier);
+			identifier = "";
+			state = 0;
+		}
+		else if (state == 2) {
+			numbers.push_back(number);
+			number = 0;
+			state = 0;
+		}
 	}
 
 	cout << "Identifiers: " << endl;
