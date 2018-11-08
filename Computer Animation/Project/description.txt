@@ -43,6 +43,8 @@ References:
 *1 - https://en.wikipedia.org/wiki/Power-up#Trick_power-ups
 
 
+Description is up-to-date? check here: https://github.com/Youssof/Projects/tree/master/Computer%20Animation/Project
+
 ==================================================================================
 
 Team Members:
