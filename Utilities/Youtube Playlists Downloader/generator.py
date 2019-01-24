@@ -1,13 +1,14 @@
 import os
 
 def manager():
-	return '''import os, subprocess
+    return '''import os, subprocess
 import threading, time
 from queue import PriorityQueue
 
 
 n = [x for x in input().split()]
-playlist_id = ''
+playlist_id = os.path.basename(__file__)
+playlist_id = playlist_id[8:-4]
 filz = []
 exit_flag = 0
 
@@ -19,13 +20,12 @@ else:
 
 def initialize():
     global filz
-    global playlist_id
-    l = 0
 
+    l = 0
+    os.chdir(playlist_id)
     if subprocess.run(['dir', '/b', '..*.bat'], shell=True, stderr=subprocess.PIPE,
                    stdout=subprocess.io.open("manager.txt", "w+")).stderr != b'':
         return 0
-
     with open('manager.txt', 'r') as f:
         filz = f.readlines()
 
@@ -33,15 +33,13 @@ def initialize():
         if filz[0][l] == '-':
             break
 
-    l-=3
-    playlist_id = filz[0][2+l+1+1:-7-l]
-
     FFilz = []
     for fil in filz:
-        FFilz.append(fil[2:2+l+1])
+        FFilz.append(fil[2:l])
     filz = FFilz
 
     subprocess.run(['del', 'manager.txt'], shell=True)
+    os.chdir('..')
     return 1
 
 class Scheduler(threading.Thread):
@@ -59,7 +57,7 @@ def download_a_file(q):
         if not q.empty():
             fil = q.get()
             if subprocess.run(['dir', '/b', fil+'*mp4'], shell=True, stderr=subprocess.PIPE).stderr != b'':
-                bat = '..' + fil + '-' + playlist_id + '-' + fil + '.bat'
+                bat = playlist_id + '\\..' + fil + '-' + playlist_id + '-' + fil + '.bat'
             queueLock.release()
             time.sleep(.1)
             if bat != 'noting':
@@ -69,7 +67,7 @@ def download_a_file(q):
                 except Exception as e:
                     print('Something wrong while downloading file '+fil)
                     print(e)
-            if subprocess.run(['dir', '/b', fil+'*mp4'], shell=True, stderr=subprocess.PIPE).stderr != b'':
+            if subprocesdasdsdss.run(['dir', '/b', fil+'*mp4'], shell=True, stderr=subprocess.PIPE).stderr != b'':
                 queueLock.acquire()
                 q.put(fil)
                 queueLock.release()
@@ -111,9 +109,9 @@ def ceil(x):
 i = [x for x in input().split()]
 
 def z(num):
-	if num < 10:
-		return 1
-	return 1 + z(num/10)
+    if num < 10:
+        return 1
+    return 1 + z(num/10)
 
 def makeup(link):
     for c in range(len(link)):
@@ -136,7 +134,7 @@ if len(i)==2:
     num=int(i[1])
 
 l = z(num)
-	
+
 if len(i)==3:
     quality=int(i[2])
 
@@ -144,7 +142,10 @@ link = makeup(link)
 # itr=1
 
 if not os.path.exists(link):
-	os.makedirs(link)
+    os.makedirs(link)
+os.chdir(link)
+if not os.path.exists(link):
+    os.makedirs(link)
 os.chdir(link)
 
 for itr in range(1,1+num):
@@ -163,10 +164,11 @@ for itr in range(1,1+num):
                 f.write('start /b '+'..'+str(itritr+1).zfill(l)+'-'+link+'-'+str(itritr+1).zfill(l)+'.bat\n')
 
 with open('.'+link+'--LIST.txt',mode='w+') as f:
-	f.write('\n');
-	
-with open('.'+link+'..LIST.bat',mode='w+') as f:
-	f.write('''youtube-dl --get-filename https://www.youtube.com/playlist?list=''' + link + ''' >> ''' + '.'+link+'--LIST.txt')
+    f.write('\n');
 
-with open('manager.py', 'w+') as f:
-	f.write(manager())
+with open('.'+link+'..LIST.bat',mode='w+') as f:
+    f.write('''youtube-dl --get-filename https://www.youtube.com/playlist?list=''' + link + ''' >> ''' + '.'+link+'--LIST.txt')
+
+os.chdir('..')
+with open('manager' + '-' + link + '-.py', 'w+') as f:
+    f.write(manager())
