@@ -150,7 +150,7 @@ os.chdir(link)
 
 for itr in range(1,1+num):
     with open('..'+str(itr).zfill(l)+'-'+link+'-'+str(itr).zfill(l)+'.bat',mode='w+') as f:
-        f.write('youtube-dl.exe www.youtube.com/playlist?list='+link+' --playlist-items '+str(itr)+' -o '+str(itr).zfill(l)+'-%'+'%'+'(title)s.'+'%'+'%'+'(ext)s -f "best[ext=mp4][height<='+str(quality)+']"  --external-downloader "aria2c.exe" --external-downloader-args "--max-concurrent-downloads 8 -x4 --log-level=error --show-console-readout false --summary-interval 5 --quiet=true"')
+        f.write('youtube-dl.exe www.youtube.com/playlist?list='+link+' --playlist-items '+str(itr)+' -o '+str(itr).zfill(l)+'-%'+'%'+'(title)s.'+'%'+'%'+'(ext)s -f "best[ext=mp4][height<='+str(quality)+']"')
     if itr%10==0:
         with open('.'+link+'--'+str(int(ceil(itr/10))).zfill(l)+'.bat',mode='w+') as f:
             f.write('@ECHO OFF\n')
