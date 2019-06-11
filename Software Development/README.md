@@ -1,3 +1,0 @@
-Software Devlopment
-
-Website assignment
