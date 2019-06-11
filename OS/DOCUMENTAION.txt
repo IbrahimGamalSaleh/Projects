@@ -1,9 +1,0 @@
-* paths must be surrounded with double quotations, in case of commands that take 2 paths.
-* options must be inputted in separate line, which will be available after inputting the line.
-
-No exceptions are handeled, though many problems (such as sgmentation fault) are handeled in loops.
-
-commands file contains all implemented commands and corresponding options
-
-
-ATTRIB command takes its path as absolute path rather realtive path.
