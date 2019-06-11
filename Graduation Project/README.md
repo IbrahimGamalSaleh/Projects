@@ -1,1 +1,1 @@
-Document Classification using Data Mining.
+Document Classification and Sentiment Analysis.
